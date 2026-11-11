@@ -12,5 +12,6 @@ COPY . /app
 
 EXPOSE 8000
 
-# gunicorn 生产级启动；溯源为纯 CPU 轻量计算，2 进程 × 4 线程足够演示
+# 默认以 gunicorn 启动 Web 进程（2 进程 × 4 线程，只读写作业队列，响应迅速）；
+# 执行器进程由 docker-compose 以 command: python worker.py 覆盖启动。
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--threads", "4", "--timeout", "60", "server:app"]

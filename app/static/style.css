@@ -58,7 +58,7 @@ textarea {
 #sql { min-height: 320px; }
 textarea:focus { outline: 2px solid #1f5f8b; border-color: #1f5f8b; }
 
-.actions { display: flex; gap: 10px; align-items: center; }
+.actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 button {
   border: none;
   border-radius: 8px;
@@ -67,10 +67,14 @@ button {
   font-weight: 600;
   cursor: pointer;
 }
-#run { background: #1f5f8b; color: #fff; }
-#run:hover { background: #174a6e; }
+#submit { background: #1f5f8b; color: #fff; }
+#submit:hover { background: #174a6e; }
 button.secondary { background: #e2e8f0; color: #334155; }
 button.secondary:hover { background: #cbd5e1; }
+button.mini { padding: 3px 10px; font-size: 12px; border-radius: 6px; background: #e2e8f0; color: #334155; }
+button.mini:hover { background: #cbd5e1; }
+button.mini.danger { background: #fee2e2; color: #b91c1c; }
+button.mini.danger:hover { background: #fecaca; }
 .status { font-size: 12.5px; color: #64748b; }
 
 .error-box {
@@ -205,3 +209,81 @@ button.secondary:hover { background: #cbd5e1; }
 .hop.kind-union-branch { background: #ede9fe; color: #5b21b6; }
 .arrow { color: #94a3b8; margin: 0 4px; }
 .empty-note { color: #94a3b8; font-size: 12.5px; }
+
+/* 作业队列与详情 */
+.right-col { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.queue-summary { font-size: 12px; color: #64748b; font-weight: 400; margin-left: 8px; }
+.job-list { max-height: 280px; overflow-y: auto; }
+.job-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.job-row:hover { background: #f1f5f9; }
+.job-row.selected { background: #eff6ff; border-color: #bfdbfe; }
+.job-id { font-family: Consolas, Menlo, monospace; font-weight: 700; color: #16324f; white-space: nowrap; }
+.job-sql {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: Consolas, Menlo, monospace;
+  font-size: 12px;
+  color: #64748b;
+}
+.job-meta { font-size: 11.5px; color: #94a3b8; white-space: nowrap; }
+.job-actions { white-space: nowrap; }
+
+.badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.st-queued      { background: #e2e8f0; color: #475569; }
+.st-running     { background: #dbeafe; color: #1d4ed8; }
+.st-succeeded   { background: #dcfce7; color: #15803d; }
+.st-failed      { background: #fee2e2; color: #b91c1c; }
+.st-cancelled   { background: #ffedd5; color: #c2410c; }
+.st-interrupted { background: #ede9fe; color: #6d28d9; }
+.st-timeout     { background: #fef3c7; color: #b45309; }
+.st-cancelling  { background: #fef9c3; color: #a16207; }
+
+.detail-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+.detail-actions { margin-left: auto; display: flex; gap: 6px; }
+.detail-times { font-size: 12px; color: #64748b; margin-bottom: 10px; }
+.note-box {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #075985;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  margin-bottom: 10px;
+}
+.note-box.warn { background: #faf5ff; border-color: #d8b4fe; color: #6b21a8; }
+.detail-panel .error-box { margin-top: 0; margin-bottom: 10px; }
+
+details.io { margin-bottom: 12px; }
+details.io summary { cursor: pointer; font-size: 13px; font-weight: 600; color: #334155; }
+.io-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+@media (max-width: 1024px) { .io-grid { grid-template-columns: 1fr; } }
+.io-label { font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 4px; }
+details.io pre {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  max-height: 180px;
+  overflow: auto;
+  white-space: pre-wrap;
+  margin: 0;
+}

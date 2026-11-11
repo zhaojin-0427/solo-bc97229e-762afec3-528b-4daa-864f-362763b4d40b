@@ -6,9 +6,37 @@ services:
     container_name: sql-lineage-web
     ports:
       - "8000:8000"
+    environment:
+      # 作业库落在共享卷上，全部 Web 进程与执行器共用
+      LINEAGE_DB: /data/lineage_jobs.db
+    volumes:
+      - lineage-data:/data
     restart: unless-stopped
+    depends_on:
+      - lineage-worker
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/')"]
       interval: 15s
       timeout: 5s
       retries: 5
+
+  lineage-worker:
+    build:
+      context: ./app
+    image: sql-lineage-web:latest
+    container_name: sql-lineage-worker
+    # 唯一执行器进程：所有 Web 进程共用的一个执行名额
+    command: ["python", "worker.py"]
+    environment:
+      LINEAGE_DB: /data/lineage_jobs.db
+      # 单作业执行上限（秒），超时强制中止并释放名额
+      LINEAGE_JOB_TIMEOUT: "${LINEAGE_JOB_TIMEOUT:-30}"
+      # 演示/测试用人工耗时（秒），让排队、取消、超时可在页面上观察到；生产置 0
+      LINEAGE_JOB_DELAY: "${LINEAGE_JOB_DELAY:-5}"
+    volumes:
+      - lineage-data:/data
+    restart: unless-stopped
+
+volumes:
+  # 作业队列与结果的本地持久化；docker compose down 后仍保留，down -v 才清空
+  lineage-data:

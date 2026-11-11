@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SQL 字段溯源 · 敏感列影响分析</title>
+  <title>SQL 字段溯源 · 作业队列</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <header class="topbar">
-  <h1>SQL 字段溯源 · 敏感列影响分析</h1>
+  <h1>SQL 字段溯源 · 敏感列影响分析（作业队列版）</h1>
   <p class="subtitle">
-    粘贴源表有序字段（字段名后加 <code>*</code> 标记敏感）与单条 SQLite SELECT，
-    逐列展示源字段及经由的 CTE 列路径。只做静态溯源，不执行 SQL。
+    提交即固定源表结构与 SQL 并返回作业号；全部 Web 进程共用一个执行名额，
+    其余作业按提交顺序排队。排队/执行中均可取消，执行满 30 秒自动中止；
+    刷新页面不丢进度，执行器重启后中断作业可一键重试。只做静态溯源，不执行 SQL。
   </p>
 </header>
 
@@ -26,9 +27,9 @@
       <textarea id="sql" spellcheck="false" placeholder="WITH c AS (SELECT ... FROM ...) SELECT ...">{{ demo_sql }}</textarea>
     </div>
     <div class="actions">
-      <button id="run" type="button">开始溯源</button>
+      <button id="submit" type="button">提交溯源作业</button>
       <button id="reset" type="button" class="secondary">恢复示例</button>
-      <span id="status" class="status"></span>
+      <span id="form-status" class="status"></span>
     </div>
     <div id="error" class="error-box" hidden></div>
     <div class="legend">
@@ -39,9 +40,24 @@
     </div>
   </section>
 
-  <section class="panel result-panel">
-    <div id="result"></div>
-  </section>
+  <div class="right-col">
+    <section class="panel jobs-panel">
+      <div class="section-title">
+        作业队列
+        <span id="queue-summary" class="queue-summary"></span>
+      </div>
+      <div id="job-list" class="job-list">
+        <div class="empty-note">暂无作业，提交后在此查看队列与状态。</div>
+      </div>
+    </section>
+
+    <section class="panel detail-panel">
+      <div class="section-title">作业详情</div>
+      <div id="job-detail">
+        <div class="empty-note">点击上方作业查看状态、失败原因、输入与逐列溯源结果。</div>
+      </div>
+    </section>
+  </div>
 </main>
 
 <script>
