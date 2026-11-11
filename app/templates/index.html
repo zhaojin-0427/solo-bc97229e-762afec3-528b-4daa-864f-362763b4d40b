@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL 字段溯源 · 敏感列影响分析</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <h1>SQL 字段溯源 · 敏感列影响分析</h1>
+  <p class="subtitle">
+    粘贴源表有序字段（字段名后加 <code>*</code> 标记敏感）与单条 SQLite SELECT，
+    逐列展示源字段及经由的 CTE 列路径。只做静态溯源，不执行 SQL。
+  </p>
+</header>
+
+<main class="layout">
+  <section class="panel input-panel">
+    <div class="field">
+      <label for="schema">源表结构（每行：表名(字段1, 字段2*, …)，<code>#</code> 开头为注释）</label>
+      <textarea id="schema" spellcheck="false" placeholder="customer(cust_id, mobile*)">{{ demo_schema }}</textarea>
+    </div>
+    <div class="field">
+      <label for="sql">单条 SELECT（支持非递归 WITH / 别名 / * / 表名.* / WHERE / INNER·LEFT JOIN ON / UNION ALL）</label>
+      <textarea id="sql" spellcheck="false" placeholder="WITH c AS (SELECT ... FROM ...) SELECT ...">{{ demo_sql }}</textarea>
+    </div>
+    <div class="actions">
+      <button id="run" type="button">开始溯源</button>
+      <button id="reset" type="button" class="secondary">恢复示例</button>
+      <span id="status" class="status"></span>
+    </div>
+    <div id="error" class="error-box" hidden></div>
+    <div class="legend">
+      <span class="tag tag-value">值依赖敏感</span>
+      <span class="tag tag-cond">条件依赖敏感</span>
+      <span class="tag tag-both">两类兼有</span>
+      <span class="hint">值依赖 = 输出表达式引用（含 CASE 条件）；条件依赖 = 沿途 WHERE / JOIN ON 引用，作用于该查询块全部输出。</span>
+    </div>
+  </section>
+
+  <section class="panel result-panel">
+    <div id="result"></div>
+  </section>
+</main>
+
+<script>
+window.DEMO_SCHEMA = {{ demo_schema | tojson }};
+window.DEMO_SQL = {{ demo_sql | tojson }};
+</script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

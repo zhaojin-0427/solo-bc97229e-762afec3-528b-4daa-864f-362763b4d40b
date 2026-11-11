@@ -1,0 +1,207 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: #f4f6fa;
+  color: #1f2937;
+}
+
+.topbar {
+  background: linear-gradient(120deg, #16324f, #1f5f8b);
+  color: #fff;
+  padding: 20px 28px 16px;
+}
+.topbar h1 { margin: 0 0 6px; font-size: 22px; }
+.subtitle { margin: 0; font-size: 13px; opacity: .85; line-height: 1.6; }
+code { background: rgba(255,255,255,.18); padding: 1px 5px; border-radius: 4px; }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(360px, 460px) 1fr;
+  gap: 18px;
+  padding: 18px 24px 32px;
+  align-items: start;
+}
+@media (max-width: 1024px) { .layout { grid-template-columns: 1fr; } }
+
+.panel {
+  background: #fff;
+  border: 1px solid #e3e8ef;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(15, 35, 60, .06);
+}
+
+.field { margin-bottom: 14px; }
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #334155;
+  line-height: 1.5;
+}
+textarea {
+  width: 100%;
+  min-height: 180px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.55;
+  resize: vertical;
+  tab-size: 4;
+}
+#sql { min-height: 320px; }
+textarea:focus { outline: 2px solid #1f5f8b; border-color: #1f5f8b; }
+
+.actions { display: flex; gap: 10px; align-items: center; }
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 9px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+#run { background: #1f5f8b; color: #fff; }
+#run:hover { background: #174a6e; }
+button.secondary { background: #e2e8f0; color: #334155; }
+button.secondary:hover { background: #cbd5e1; }
+.status { font-size: 12.5px; color: #64748b; }
+
+.error-box {
+  margin-top: 12px;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+}
+
+.legend { margin-top: 14px; font-size: 12px; color: #64748b; line-height: 2; }
+.tag {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 6px;
+}
+.tag-value { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+.tag-cond  { background: #ffedd5; color: #c2410c; border: 1px solid #fdba74; }
+.tag-both  { background: #ede9fe; color: #6d28d9; border: 1px solid #c4b5fd; }
+.tag-clean { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+.hint { display: block; margin-top: 4px; }
+
+/* 结果区 */
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 4px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #e2e8f0;
+  color: #16324f;
+}
+.meta-tables { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.meta-table {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #f8fafc;
+  font-size: 12.5px;
+  min-width: 180px;
+}
+.meta-table b { color: #16324f; }
+.meta-col { display: inline-block; margin: 2px 4px 2px 0; padding: 1px 7px;
+  border-radius: 6px; background: #eef2f7; }
+.meta-col.sensitive { background: #fee2e2; color: #b91c1c; font-weight: 600; }
+
+.cte-block { margin-bottom: 18px; }
+.cte-name { font-weight: 700; color: #1f5f8b; margin-bottom: 6px; font-size: 13.5px; }
+.cte-cols { display: flex; flex-wrap: wrap; gap: 6px; }
+.cte-col {
+  font-size: 12.5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  color: #3730a3;
+}
+.cte-col.s-value { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
+.cte-col.s-condition { background: #ffedd5; border-color: #fdba74; color: #c2410c; }
+.cte-col.s-both { background: #ede9fe; border-color: #c4b5fd; color: #6d28d9; }
+
+.out-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.out-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  flex-wrap: wrap;
+}
+.out-pos {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: #1f5f8b; color: #fff;
+  font-size: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 700;
+}
+.out-name { font-weight: 700; font-size: 14px; font-family: Consolas, Menlo, monospace; }
+.out-expr { color: #64748b; font-size: 12px; font-family: Consolas, Menlo, monospace;
+  word-break: break-all; }
+.out-body { padding: 10px 14px 12px; }
+
+.dep-group { margin-bottom: 10px; }
+.dep-group:last-child { margin-bottom: 0; }
+.dep-title { font-size: 12.5px; font-weight: 700; margin-bottom: 6px; }
+.dep-title.value { color: #b91c1c; }
+.dep-title.condition { color: #c2410c; }
+.dep-title.clean { color: #15803d; }
+
+.dep-item {
+  border-left: 3px solid #cbd5e1;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  background: #f8fafc;
+  border-radius: 0 8px 8px 0;
+}
+.dep-item.sensitive { border-left-color: #dc2626; background: #fef7f7; }
+.dep-item.cond { border-left-color: #ea580c; }
+.dep-base {
+  font-family: Consolas, Menlo, monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.dep-base .s-flag { color: #dc2626; }
+.path-chain { margin-top: 5px; font-size: 12px; color: #475569;
+  font-family: Consolas, Menlo, monospace; line-height: 1.9; }
+.hop {
+  display: inline-block;
+  background: #eef2f7;
+  border-radius: 6px;
+  padding: 1px 7px;
+  margin: 2px 0;
+}
+.hop.kind-condition { background: #ffedd5; color: #9a3412; }
+.hop.kind-star { background: #e0f2fe; color: #075985; }
+.hop.kind-ref { background: #f1f5f9; color: #334155; }
+.hop.kind-value { background: #ecfdf5; color: #166534; }
+.hop.kind-union-branch { background: #ede9fe; color: #5b21b6; }
+.arrow { color: #94a3b8; margin: 0 4px; }
+.empty-note { color: #94a3b8; font-size: 12.5px; }
